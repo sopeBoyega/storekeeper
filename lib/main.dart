@@ -32,7 +32,7 @@ final colorScheme = ColorScheme.fromSeed(
     ),
        elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         side: const BorderSide(color: Color(0xFF2563EB)),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),
