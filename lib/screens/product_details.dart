@@ -32,7 +32,7 @@ class ProductDetails extends StatelessWidget {
                 child: FadeInImage(
                   placeholder: MemoryImage(kTransparentImage),
                   // NetworkImage class helps load images from the internet
-                    image: NetworkImage('https://via.placeholder.com/600x200.png?text=No+Image'),
+                    image: product.image != null ? FileImage(product.image!) : NetworkImage(""),
                   fit: BoxFit.cover,
                   height: 200,
                   width: double.infinity,

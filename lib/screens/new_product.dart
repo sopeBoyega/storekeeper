@@ -1,9 +1,8 @@
-import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:storekeeper/data/dummy_data.dart';
 import 'package:storekeeper/models/item.dart';
+import 'package:storekeeper/providers/product_provider.dart';
 import 'package:storekeeper/widgets/image_input.dart';
 
 class NewProductScreen extends ConsumerStatefulWidget {
@@ -38,7 +37,7 @@ class _NewProductScreenState extends ConsumerState<NewProductScreen> {
     debugPrint('Quantity: $_productQuantity');
     debugPrint('Image: ${_selectedImage!.path}');
 
-   products.add(Product(name:_enteredTitle, quantity: int.parse(_productQuantity), price: double.parse(_productPrice), image: File(_selectedImage!.path)),);
+    ref.read(productsProvider.notifier).addNewProduct(_enteredTitle,File(_selectedImage!.path),int.parse(_productQuantity) ,double.parse(_productPrice));
 
     Navigator.of(context).pop();
   }
