@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storekeeper/models/item.dart';
 import 'package:storekeeper/providers/product_provider.dart';
-import 'package:storekeeper/screens/home.dart';
+
 import 'package:storekeeper/widgets/image_input.dart';
 
 class EditProductScreen extends ConsumerStatefulWidget {
@@ -32,7 +32,7 @@ class _EditProductScreenState extends ConsumerState<EditProductScreen> {
     _selectedImage = widget.product.image;
   }
 
-  void _editProduct() {
+  Future<void> _editProduct() async {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
 
@@ -48,11 +48,21 @@ class _EditProductScreenState extends ConsumerState<EditProductScreen> {
     debugPrint('Quantity: $_productQuantity');
     debugPrint('Image: ${_selectedImage != null ? _selectedImage!.path : 'No image selected'}');
 
-    final newProduct  = _selectedImage != null ? Product(name: _enteredTitle, quantity:int.parse(_productQuantity), price: double.parse(_productPrice)) : Product(name: _enteredTitle, quantity:int.parse(_productQuantity), price: double.parse(_productPrice),image: _selectedImage);
+    final newProduct = Product(
+      id: widget.product.id, // Keep the same ID for the product
+      name: _enteredTitle,
+      quantity: int.parse(_productQuantity),
+      price: double.parse(_productPrice),
+      image: _selectedImage,  // This will be either the new image or null
+    );
 
-    ref.read(productsProvider.notifier).editProduct(widget.product,newProduct);
+    await ref.read(productsProvider.notifier).editProduct(widget.product, newProduct);
+    
+    
+    if (mounted) {
+      Navigator.of(context).pop();
+  }
 
-    Navigator.push(context,MaterialPageRoute(builder: (ctx) => HomeScreen()));
   }
 
   String? _validateTitle(String? value) {
@@ -104,7 +114,8 @@ class _EditProductScreenState extends ConsumerState<EditProductScreen> {
                       initialImage: product.image,
                       onSelectImage: (image) {
                         setState(() {
-                          _selectedImage = image;
+                          // If we get an empty path, it means we're removing the image
+                          _selectedImage = image.path.isEmpty ? null : image;
                         });
                       },
                     ),

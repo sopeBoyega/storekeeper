@@ -51,14 +51,31 @@ class _ImageInputState extends State<ImageInput> {
     Widget content;
 
     if (_selectedImage != null) {
-      content = GestureDetector(
-        onTap: () => _pickImage(ImageSource.camera),
-        child: Image.file(
-          _selectedImage!,
-          fit: BoxFit.cover,
-          width: double.infinity,
-          height: double.infinity,
-        ),
+      content = Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.file(
+            _selectedImage!,
+            fit: BoxFit.cover,
+          ),
+          Positioned(
+            top: 8,
+            right: 8,
+            child: Material(
+              color: Colors.black.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(20),
+              child: IconButton(
+                icon: const Icon(Icons.delete, color: Colors.white),
+                onPressed: () {
+                  setState(() {
+                    _selectedImage = null;
+                  });
+                  widget.onSelectImage(File('')); 
+                },
+              ),
+            ),
+          ),
+        ],
       );
     } else {
       content = Column(
@@ -67,7 +84,7 @@ class _ImageInputState extends State<ImageInput> {
           Icon(
             Icons.image_outlined,
             size: 48,
-            color: theme.colorScheme.onSurface.withOpacity(0.6),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
           const SizedBox(height: 8),
           Text('No image', style: theme.textTheme.bodyMedium),
@@ -96,7 +113,7 @@ class _ImageInputState extends State<ImageInput> {
       decoration: BoxDecoration(
         border: Border.all(
           width: 1,
-          color: theme.colorScheme.primary.withOpacity(0.2),
+          color: theme.colorScheme.primary.withValues(alpha: 0.2),
         ),
         borderRadius: BorderRadius.circular(8),
       ),

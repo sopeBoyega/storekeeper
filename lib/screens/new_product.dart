@@ -20,7 +20,7 @@ class _NewProductScreenState extends ConsumerState<NewProductScreen> {
 
   File? _selectedImage;
 
-  void _saveProduct() {
+  Future<void> _saveProduct() async {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
 
@@ -37,9 +37,16 @@ class _NewProductScreenState extends ConsumerState<NewProductScreen> {
     debugPrint('Quantity: $_productQuantity');
     debugPrint('Image: ${_selectedImage!.path}');
 
-    ref.read(productsProvider.notifier).addNewProduct(_enteredTitle,File(_selectedImage!.path),int.parse(_productQuantity) ,double.parse(_productPrice));
-
-    Navigator.of(context).pop();
+    await ref.read(productsProvider.notifier).addNewProduct(
+      _enteredTitle,
+      _selectedImage,
+      int.parse(_productQuantity),
+      double.parse(_productPrice),
+    );
+    
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
   }
 
   String? _validateTitle(String? value) {

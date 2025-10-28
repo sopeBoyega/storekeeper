@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:storekeeper/models/item.dart';
 // import 'package:storekeeper/data/dummy_data.dart';
 import 'package:storekeeper/providers/product_provider.dart';
 import 'package:storekeeper/screens/new_product.dart';
@@ -15,7 +16,15 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
+  void initState() {
+    super.initState();
+    // Load products when the screen initializes
+    ref.read(productsProvider.notifier).loadProducts();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Watch both the products list and any loading state
     final products = ref.watch(productsProvider);
     final removeProduct = ref.read(productsProvider.notifier).removeProduct;
     return Scaffold(
@@ -33,37 +42,45 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ],
       ),
-      body: Center(
-        child: ListView.builder(
-          itemCount: products.length,
-          // mainAxisAlignment: MainAxisAlignment.start,
-          itemBuilder: (context, index) {
-            final product = products[index];
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (ctx) => ProductDetails(product: product),
+      body: products.isEmpty
+          ? const Center(
+              child: Text(
+                textAlign: TextAlign.center,
+                "Uh ohh.., You have no items in your list, Click the plus button to add items",
+              ),
+            )
+          : Center(
+            child: ListView.builder(
+              itemCount: products.length,
+              // mainAxisAlignment: MainAxisAlignment.start,
+              itemBuilder: (context, index) {
+                final product = products[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (ctx) => ProductDetails(product: product),
+                      ),
+                    );
+                  },
+                  child: Dismissible(
+                    key: ValueKey(product.id),
+                    onDismissed: (direction) {
+                      removeProduct(product);
+                    },
+                    child: ProductTile(
+                      title: product.name,
+                      price: product.price,
+                      quantity: product.quantity,
+                      bgImage: product.image,
+                    ),
                   ),
                 );
               },
-              child: Dismissible(
-                key: ValueKey(product.id),
-                onDismissed: (direction) {
-                  removeProduct(product);
-                },
-                child: ProductTile(
-                  title: product.name,
-                  price: product.price,
-                  quantity: product.quantity,
-                  bgImage: product.image,
-                ),
-              ),
-            );
-          },
-        ),
-      ),
+            ),
+          )
     );
+        }
   }
-}
+
