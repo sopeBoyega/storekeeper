@@ -49,7 +49,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 );
               },
               child: Dismissible(
-                key: ValueKey(product.name),
+                key: ValueKey(product.id),
                 onDismissed: (direction) {
                   removeProduct(product);
                 },

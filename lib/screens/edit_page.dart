@@ -3,24 +3,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:storekeeper/models/item.dart';
 import 'package:storekeeper/providers/product_provider.dart';
+import 'package:storekeeper/screens/home.dart';
 import 'package:storekeeper/widgets/image_input.dart';
 
-class NewProductScreen extends ConsumerStatefulWidget {
-  const NewProductScreen({super.key});
+class EditProductScreen extends ConsumerStatefulWidget {
+  const EditProductScreen({super.key, required this.product});
 
+
+  final Product product;
   @override
-  ConsumerState<NewProductScreen> createState() => _NewProductScreenState();
+  ConsumerState<EditProductScreen> createState() => _EditProductScreenState();
 }
 
-class _NewProductScreenState extends ConsumerState<NewProductScreen> {
+class _EditProductScreenState extends ConsumerState<EditProductScreen> {
   final _formKey = GlobalKey<FormState>();
+  
+  
   var _enteredTitle = "";
   var _productPrice = "";
   var _productQuantity = "";
 
   File? _selectedImage;
 
-  void _saveProduct() {
+  @override
+  void initState() {
+    super.initState();
+    // If the product already has an image, use it as the initial selection
+    _selectedImage = widget.product.image;
+  }
+
+  void _editProduct() {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
 
@@ -31,15 +43,16 @@ class _NewProductScreenState extends ConsumerState<NewProductScreen> {
     //   return;
     // }
 
-    // TODO: persist product using sqflite and riverpod
     debugPrint('Title: $_enteredTitle');
     debugPrint('Price: $_productPrice');
     debugPrint('Quantity: $_productQuantity');
-    debugPrint('Image: ${_selectedImage!.path}');
+    debugPrint('Image: ${_selectedImage != null ? _selectedImage!.path : 'No image selected'}');
 
-    ref.read(productsProvider.notifier).addNewProduct(_enteredTitle,File(_selectedImage!.path),int.parse(_productQuantity) ,double.parse(_productPrice));
+    final newProduct  = _selectedImage != null ? Product(name: _enteredTitle, quantity:int.parse(_productQuantity), price: double.parse(_productPrice)) : Product(name: _enteredTitle, quantity:int.parse(_productQuantity), price: double.parse(_productPrice),image: _selectedImage);
 
-    Navigator.of(context).pop();
+    ref.read(productsProvider.notifier).editProduct(widget.product,newProduct);
+
+    Navigator.push(context,MaterialPageRoute(builder: (ctx) => HomeScreen()));
   }
 
   String? _validateTitle(String? value) {
@@ -65,6 +78,7 @@ class _NewProductScreenState extends ConsumerState<NewProductScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final product = widget.product;
 
     return Scaffold(
       appBar: AppBar(
@@ -87,6 +101,7 @@ class _NewProductScreenState extends ConsumerState<NewProductScreen> {
                     // Image preview and the picker,abeg work
                     const SizedBox(height: 12),
                     ImageInput(
+                      initialImage: product.image,
                       onSelectImage: (image) {
                         setState(() {
                           _selectedImage = image;
@@ -97,6 +112,7 @@ class _NewProductScreenState extends ConsumerState<NewProductScreen> {
 
                     // Title
                     TextFormField(
+                      initialValue: product.name,
                       decoration: const InputDecoration(
                         labelText: 'Name',
                         border: OutlineInputBorder(),
@@ -115,6 +131,7 @@ class _NewProductScreenState extends ConsumerState<NewProductScreen> {
                         Expanded(
                           flex: 2,
                           child: TextFormField(
+                            initialValue: product.price.toString(),
                             keyboardType: const TextInputType.numberWithOptions(
                                 signed: false, decimal: true),
                             decoration: const InputDecoration(
@@ -132,6 +149,7 @@ class _NewProductScreenState extends ConsumerState<NewProductScreen> {
                         Expanded(
                           flex: 1,
                           child: TextFormField(
+                            initialValue: product.quantity.toString(),
                             keyboardType: const TextInputType.numberWithOptions(
                                 signed: false, decimal: false),
                             decoration: const InputDecoration(
@@ -160,9 +178,9 @@ class _NewProductScreenState extends ConsumerState<NewProductScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: ElevatedButton.icon(
-                            onPressed: _saveProduct,
+                            onPressed: _editProduct,
                             icon: const Icon(Icons.add),
-                            label: const Text('Add Item'),
+                            label: const Text('Edit'),
                             style: ElevatedButton.styleFrom(
                             ),
                           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:storekeeper/models/item.dart';
+import 'package:storekeeper/screens/edit_page.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class ProductDetails extends StatelessWidget {
@@ -13,7 +14,11 @@ class ProductDetails extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(product.name,style: Theme.of(context).textTheme.titleMedium,),
-
+       actions: [
+        IconButton(onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (ctx) => EditProductScreen(product: product)));
+        }, icon: Icon(Icons.edit))
+       ],
       ),
 
       body: Padding(
@@ -30,13 +35,13 @@ class ProductDetails extends StatelessWidget {
               child: Hero(
                 tag: product.name,
                 child: FadeInImage(
-                  placeholder: MemoryImage(kTransparentImage),
-                  // NetworkImage class helps load images from the internet
-                    image: product.image != null ? FileImage(product.image!) : NetworkImage(""),
-                  fit: BoxFit.cover,
-                  height: 200,
-                  width: double.infinity,
-                ),
+                    placeholder: MemoryImage(kTransparentImage),
+                    // NetworkImage class helps load images from the internet
+                      image: product.image != null ? FileImage(product.image!)  : const AssetImage('assets/img.png'),
+                    fit: BoxFit.cover,
+                    height: 200,
+                    width: double.infinity,
+                  ),
               ),
             ),
             Text(
