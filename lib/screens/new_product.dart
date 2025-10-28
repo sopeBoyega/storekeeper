@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:storekeeper/models/item.dart';
 import 'package:storekeeper/providers/product_provider.dart';
 import 'package:storekeeper/widgets/image_input.dart';
 

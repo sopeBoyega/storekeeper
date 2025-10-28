@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:storekeeper/models/item.dart';
 // import 'package:storekeeper/data/dummy_data.dart';
 import 'package:storekeeper/providers/product_provider.dart';
 import 'package:storekeeper/screens/new_product.dart';
