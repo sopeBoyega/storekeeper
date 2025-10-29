@@ -32,7 +32,7 @@ Watch the app in action:
 
 Get the latest release:
 
-[⬇️ Download APK](https://appetize.io/app/b_3g4guj46sebbrp3s6bbuyvgjfe)
+[⬇️ Download APK](https://drive.google.com/file/d/1rCxA7xEUQekdyTIZWyGR83BqsWNTQ8qo/view?usp=sharinge)
 
 ## 🛠️ Technical Details
 
@@ -75,7 +75,7 @@ Built with:
 
 - [📂 GitHub Repository](https://github.com/sopeBoyega/storekeeper)
 - [🎥 Demo Video](https://drive.google.com/file/d/1bg6WtCvYeuukwBOBOsxk_grmSB8K_Z65/view?usp=sharingK)
-- [📱 Download APK](https://appetize.io/app/b_3g4guj46sebbrp3s6bbuyvgjfe)
+- [📱 Download APK](https://drive.google.com/file/d/1rCxA7xEUQekdyTIZWyGR83BqsWNTQ8qo/view?usp=sharing)
 
 ## 🤝 Contributing
 
